@@ -483,8 +483,11 @@ const pollChatResult = async (chatId, convId, retryCount = 0) => {
 // }
 
  try {
-    const response = await request.get(`/v3/chat/retrieve?chat_id=${chatId}&conversation_id=${convId}`)
+    // const response = await request.get(`/v3/chat/retrieve?chat_id=${chatId}&conversation_id=${convId}`)
     
+    const isDev = import.meta.env.DEV
+const apiUrl = isDev ? `/v3/chat/retrieve?chat_id=${chatId}&conversation_id=${convId}` : `/api/coze/retrieve?chat_id=${chatId}&conversation_id=${convId}`
+const response = await request.get(apiUrl)
     if (response.code === 0) {
       const status = response.data?.status
       
@@ -511,8 +514,12 @@ const pollChatResult = async (chatId, convId, retryCount = 0) => {
 
 const getChatMessages = async (chatId, convId) => {
   try {
-    const response = await request.get(`/v3/chat/message/list?chat_id=${chatId}&conversation_id=${convId}`)
+    // const response = await request.get(`/v3/chat/message/list?chat_id=${chatId}&conversation_id=${convId}`)
     
+    const isDev = import.meta.env.DEV
+const apiUrl = isDev ? `/v3/chat/message/list?chat_id=${chatId}&conversation_id=${convId}` : `/api/coze/message/list?chat_id=${chatId}&conversation_id=${convId}`
+const response = await request.get(apiUrl)
+
     if (response.code === 0 && response.data) {
       return parseCozeMessage(response.data)
     }
@@ -622,7 +629,10 @@ const sendMessage = async () => {
 
     console.log('最终发送参数：', JSON.stringify(requestData, null, 2))
 
-    const response = await request.post('/v3/chat', requestData)
+    // const response = await request.post('/v3/chat', requestData)
+    const isDev = import.meta.env.DEV
+const apiUrl = isDev ? '/v3/chat' : '/api/coze'
+const response = await request.post(apiUrl, requestData)
 
     if (response.code === 0 && response.data) {
       const chatId = response.data.id
